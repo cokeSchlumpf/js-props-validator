@@ -1,5 +1,6 @@
-# js-props - JavaScript Property validation
-Lorem ipsum ...
+# js-props-validator [![Build Status](https://travis-ci.org/cokeSchlumpf/js-props-validator.svg?branch=master)](https://travis-ci.org/cokeSchlumpf/js-props-validator)
+
+JavaScript object properties validation.
 
 ## Getting Started
 
