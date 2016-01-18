@@ -5,13 +5,23 @@ jest.dontMock('../main.js');
 var Props = require('../main.js');
 
 describe('Props.any', function() {
-  it('checks any values', function() {
+  it('checks values by a custom function', function() {
     var validator = Props.any((value) => {
       return value > 10
     });
 
     expect(validator.validateValue(13)).toEqual(true);
     expect(validator.validateValue(9)).toEqual(false);
+  });
+
+  it('checks values against a set of values', function() {
+    const validator = Props.any([ Props.number(), Props.string() ]);
+
+    expect(validator.validateValue(12)).toEqual(true);
+    expect(validator.validateValue("twelve")).toEqual(true);
+    expect(validator.validateValue({
+      "twelve": 12
+    })).toEqual(false);
   });
 });
 
@@ -152,5 +162,50 @@ describe('Props.object', function() {
       name: 'Egon',
       country: 'Germany'
     });
+  });
+});
+
+describe('Props.object with variable property names', function() {
+  var validator = Props.object(Props.object({
+    label: Props.string(),
+    value: Props.any([ Props.number(), Props.string() ])
+  }));
+
+  it('is also allowed to check only the type of the values of an object - independent from the key', function() {
+    expect(validator.validateValue({
+      id: {
+        label: "#",
+        value: 0
+      },
+      name: {
+        label: "Name",
+        value: "Egon"
+      }
+    })).toEqual(true)
+  });
+
+  it('is also allowed to check only the type of the values of an object - independent from the key (negative-test - wrong type)', function() {
+    expect(validator.validateValue({
+      id: {
+        label: 0,
+        value: 0
+      },
+      name: {
+        label: "Name",
+        value: "Egon"
+      }
+    })).toEqual(false)
+  });
+
+  it('is also allowed to check only the type of the values of an object - independent from the key (negative-test - missing field)', function() {
+    expect(validator.validateValue({
+      id: {
+        value: 0
+      },
+      name: {
+        label: "Name",
+        value: "Egon"
+      }
+    })).toEqual(false)
   });
 })

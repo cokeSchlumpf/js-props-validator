@@ -73,7 +73,7 @@ class AnyProp extends AbstractType {
   _validateValue(value) {
     return super._validateValue(value)
       && (this._getCheckValue(value) === undefined || (!(this.ofType && _.isFunction(this.ofType)) || this.ofType(value)))
-      && (this._getCheckValue(value) === undefined || (!(this.ofType && _.isArray(this.ofType)) || _.findIndex(this.ofType, (type) => type.validateValue(this._getCheckValue)) > -1));
+      && (this._getCheckValue(value) === undefined || (!(this.ofType && _.isArray(this.ofType)) || _.findIndex(this.ofType, (type) => type.validateValue(this._getCheckValue(value)), this) > -1));
   }
 
 }
@@ -160,10 +160,14 @@ class ObjectProp extends AbstractType {
       return this.ofType[key].validateValueFalse(this._getCheckValue(value[key]), key);
     };
 
+    let checkFieldValues = value => {
+      return this.ofType.validateValueFalse(value);
+    }
+
     return super._validateValue(value)
       && (this._getCheckValue(value) === undefined || _.isObject(this._getCheckValue(value)))
-      // && (!(this.ofType && _.isArray(this.ofType)) || _.findIndex(_.values(this._getCheckValue(value), this), this.ofType.validateValueFalse) === -1)
-      && (this._getCheckValue(value) === undefined || (!(this.ofType && _.isObject(this.ofType)) || _.chain(this.ofType).keys().findIndex(checkFields, this).value() === -1));
+      && (this._getCheckValue(value) === undefined || (!(this.ofType instanceof AbstractType) || _.findIndex(_.values(this._getCheckValue(value), this), checkFieldValues, this) === -1))
+      && (this._getCheckValue(value) === undefined || (!(this.ofType && _.isObject(this.ofType) && !(this.ofType instanceof AbstractType)) || _.chain(this.ofType).keys().findIndex(checkFields, this).value() === -1));
   }
 
   valueOrDefault(value) {

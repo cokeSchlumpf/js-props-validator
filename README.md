@@ -75,7 +75,7 @@ Checks for arrays. `ofType` can be defined as Type. E.g.:
 ```
 const validator = Props.array(Props.string());
 validator.validateValue([ "a", "b", "c" ]) === true;
-validator.validateValue([ 1, 2, 3]) === false;
+validator.validateValue([ 1, 2, 3 ]) === false;
 ```
 
 ### Boolean
@@ -119,11 +119,49 @@ Checks for numbers.
 ### Object
 
 ```
-TODO
-Props.number([ isOptional: boolean = false [, defaultValue: Object ]])
+Props.object(ofType: Object | Type [, isOptional: boolean = false [, defaultValue: Number ]])
 ```
 
-Checks for objects.
+`ofType` can be a predefined object structure. E.g.:
+
+```
+const validator = Props.object({
+    name: Props.string(),
+    age: Props.number(),
+    phone: Props.string().isOptional(),
+    country: Props.oneOf([ 'Austria', 'Germany', 'Switzerland' ]).withDefault('Germany')
+  });
+```
+
+If `ofType` is a type, the validator checks if every property of the object meets the type's validations. E.g.:
+
+```
+const validator = Props.object(Props.object({
+  label: Props.string(),
+  value: Props.any([ Props.number(), Props.string() ])
+}));
+
+validator.validateValue({
+  id: {
+    label: "#",
+    value: 0
+  },
+  name: {
+    label: "Name",
+    value: "Egon"
+  }
+}) === true;
+
+validator.validateValue({
+  id: {
+    value: 0
+  },
+  name: {
+    label: "Name",
+    value: "Egon"
+  }
+}) === false;
+```
 
 ### String
 
