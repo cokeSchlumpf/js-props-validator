@@ -1,0 +1,156 @@
+jest.dontMock('underscore');
+jest.dontMock('underscore-deep-extend');
+jest.dontMock('../main.js');
+
+var Props = require('../main.js');
+
+describe('Props.any', function() {
+  it('checks any values', function() {
+    var validator = Props.any((value) => {
+      return value > 10
+    });
+
+    expect(validator.validateValue(13)).toEqual(true);
+    expect(validator.validateValue(9)).toEqual(false);
+  });
+});
+
+describe('Props.array', function() {
+  it('checks an array value', function() {
+    var validator = Props.array();
+    expect(validator.validateValue([ 1, 2, 3 ])).toEqual(true);
+  });
+
+  it('checks a non valid array', function() {
+    var validator = Props.array();
+    expect(validator.validateValue('abc')).toEqual(false);
+  });
+
+  it('checks an array with a spcific type', function() {
+    var validator = Props.array(Props.string());
+    expect(validator.validateValue([ 'a', 'b', 'c' ])).toEqual(true);
+  });
+
+  it('checks an array with a spcific type (negative test)', function() {
+    var validator = Props.array(Props.string());
+    expect(validator.validateValue([ 'a', 2, 'c' ])).toEqual(false);
+  });
+});
+
+describe('Props.bool', function() {
+  it('checks a boolean value', function() {
+    var validator = Props.bool();
+    expect(validator.validateValue(false)).toEqual(true);
+  });
+
+  it('checks a boolean value (negative-test)', function() {
+    var validator = Props.bool();
+    expect(validator.validateValue(1)).toEqual(false);
+  });
+});
+
+describe('Props.oneOf', function() {
+  it('checks an enumeration value', function() {
+    var validator = Props.oneOf([ 'a', 'b', 'c' ]);
+    expect(validator.validateValue('a')).toEqual(true);
+  });
+
+  it('checks an enumeration value (negative test)', function() {
+    var validator = Props.oneOf([ 'a', 'b', 'c' ]);
+    expect(validator.validateValue('f')).toEqual(false);
+  });
+});
+
+describe('Props.func', function() {
+  it('checks a function value', function() {
+    var validator = Props.func();
+    expect(validator.validateValue(function() {
+      return true;
+    })).toEqual(true);
+  });
+
+  it('checks a function value (negative test)', function() {
+    var validator = Props.func();
+    expect(validator.validateValue('f')).toEqual(false);
+  });
+});
+
+describe('Props.number', function() {
+  it('checks a number value', function() {
+    var validator = Props.number();
+    expect(validator.validateValue(42)).toEqual(true);
+  });
+
+  it('checks a number value (negative test)', function() {
+    var validator = Props.number();
+    expect(validator.validateValue('f')).toEqual(false);
+  });
+});
+
+describe('Props.string', function() {
+  it('checks a string value', function() {
+    var validator = Props.string();
+    expect(validator.validateValue('42')).toEqual(true);
+  });
+
+  it('checks a string value (negative test)', function() {
+    var validator = Props.string();
+    expect(validator.validateValue(42)).toEqual(false);
+  });
+});
+
+describe('Props.object', function() {
+  var validator = Props.object({
+    name: Props.string(),
+    age: Props.number(),
+    phone: Props.string().isOptional(),
+    country: Props.oneOf([ 'Austria', 'Germany', 'Switzerland' ]).withDefault('Germany')
+  });
+
+  it('checks simple object validation', function() {
+    expect(validator.validate({
+      name: 'Egon',
+      age: 12
+    }, "test-object")).toEqual(true);
+  });
+
+  it('checks simple object validation (negative-test with exception)', function() {
+    expect(function() {
+      validator.validate({
+        name: 'Egon'
+      })
+    }).toThrow();
+  });
+
+  it('checks an optional value', function() {
+    expect(validator.validateValue({
+      name: 'Egon',
+      age: 12,
+      phone: '123'
+    })).toEqual(true);
+  });
+
+  it('checks an optional value (negative-test)', function() {
+    expect(validator.validateValue({
+      name: 'Egon',
+      age: 12,
+      phone: 123
+    })).toEqual(false);
+  });
+
+  it('checks simple object validation (negative-test)', function() {
+    expect(validator.validateValue({
+      name: 'Egon',
+      age: 'twelve'
+    })).toEqual(false);
+  });
+
+  it('checks the default value filling', function() {
+    expect(validator.valueOrDefault({
+      name: 'Egon',
+    })).toEqual({
+      name: 'Egon',
+      country: 'Germany'
+    });
+  });
+})

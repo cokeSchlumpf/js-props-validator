@@ -1,0 +1,37 @@
+{
+  "name": "js-props",
+  "version": "1.0.0",
+  "description": "JavaScript object properties validation.",
+  "author": "Michael Wellner <info@michaelwellner.de>",
+  "main": "lib/main.js",
+  "repository": "http://coke-schlumpf.github.com",
+  "license": "MIT",
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "underscore-deep-extend": "0.0.5"
+  },
+  "devDependencies": {
+    "babel-core": "^6.2.1",
+    "babel-jest": "^5.3.0",
+    "esformatter": "^0.8.1",
+    "eslint": "^1.10.2",
+    "jest-cli": "^0.8.0"
+  },
+  "scripts": {
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile",
+    "test": "jest"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "testFileExtensions": [
+      "es6",
+      "js"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "es6"
+    ]
+  }
+}
