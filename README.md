@@ -1,6 +1,6 @@
 # js-props-validator [![Build Status](https://travis-ci.org/cokeSchlumpf/js-props-validator.svg?branch=master)](https://travis-ci.org/cokeSchlumpf/js-props-validator) [![dependency status](https://david-dm.org/cokeSchlumpf/js-props-validator.svg)](https://david-dm.org/cokeSchlumpf/js-props-validator)
 
-JavaScript object properties validation. See below or [src/\__tests\__/main-test.js](./src/__tests__/main-test.js) for examples.
+JavaScript object properties validation. See below or [src/\__tests\__/main-test.js](./blob/master/src/main/__tests__/main-test.js) for examples.
 
 ## Getting Started
 
