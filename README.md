@@ -4,6 +4,12 @@ JavaScript object properties validation. See below or [src/__tests__/main-test.j
 
 ## Getting Started
 
+Install js-props-validator as NPM dependency.
+
+```
+npm install --save js-props-validator
+```
+
 ## Example
 
 ```
