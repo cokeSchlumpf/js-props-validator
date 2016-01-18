@@ -1,6 +1,6 @@
 # js-props-validator [![Build Status](https://travis-ci.org/cokeSchlumpf/js-props-validator.svg?branch=master)](https://travis-ci.org/cokeSchlumpf/js-props-validator) [![dependency status](https://david-dm.org/cokeSchlumpf/js-props-validator.svg)](https://david-dm.org/cokeSchlumpf/js-props-validator)
 
-JavaScript object properties validation.
+JavaScript object properties validation. See below or [src/__tests__/main-test.js](./src/__tests_main-test.js) for examples.
 
 ## Getting Started
 
@@ -131,36 +131,41 @@ const validator = Props.object({
     phone: Props.string().isOptional(),
     country: Props.oneOf([ 'Austria', 'Germany', 'Switzerland' ]).withDefault('Germany')
   });
+
+validator.validate({
+    name: 'Egon',
+    age: 12
+  }) === true;
 ```
 
 If `ofType` is a type, the validator checks if every property of the object meets the type's validations. E.g.:
 
 ```
 const validator = Props.object(Props.object({
-  label: Props.string(),
-  value: Props.any([ Props.number(), Props.string() ])
-}));
+    label: Props.string(),
+    value: Props.any([ Props.number(), Props.string() ])
+  }));
 
 validator.validateValue({
-  id: {
-    label: "#",
-    value: 0
-  },
-  name: {
-    label: "Name",
-    value: "Egon"
-  }
-}) === true;
+    id: {
+      label: "#",
+      value: 0
+    },
+    name: {
+      label: "Name",
+      value: "Egon"
+    }
+  }) === true;
 
 validator.validateValue({
-  id: {
-    value: 0
-  },
-  name: {
-    label: "Name",
-    value: "Egon"
-  }
-}) === false;
+    id: {
+      value: 0
+    },
+    name: {
+      label: "Name",
+      value: "Egon"
+    }
+  }) === false;
 ```
 
 ### String
@@ -170,3 +175,58 @@ Props.string([ isOptional: boolean = false [, defaultValue: String ]])
 ```
 
 Checks for strings.
+
+## Type methods
+
+Every type supports the following listed methods.
+
+### isOptional()
+
+The validation will return `true` if value is not set.
+
+```
+const validator = Props.number().isOptional(); // alternative to: Props.number(true);
+validator.validateValue(1) === true;
+validator.validateValue(undefined) === true;
+validator.validateValue("one") === false;
+```
+
+### withDefault()
+
+The validation will return a default value when calling `valueOrDefault` on a undefined value. Note: `isOptional` will be automatically set to `true` when calling `withDefault`.
+
+```
+const validator = Props.number().withDefault(42); // alternative to: Props.number(true);
+validator.validateValue(1) === true;
+validator.validateValue(undefined) === true;
+validator.validateValue("one") === false;
+
+validator.valueOrDefault(1) === 1;
+validator.valueOrDefault(undefined) === 42;
+```
+
+### validate(value: Any [, valueName: String])
+
+The Method will validate the value, if the validation fails an error will be thrown. `valueName` is used within the error message if set.
+
+```
+const validator = Props.object({
+    name: Props.string(),
+    age: Props.number(),
+    phone: Props.string().isOptional(),
+    country: Props.oneOf([ 'Austria', 'Germany', 'Switzerland' ]).withDefault('Germany')
+  });
+
+validator.validate({
+    name: 'Egon'
+  });
+// => Will throw exception due to missing age
+```
+
+### validateValue(value: Any [, valueName: String])
+
+Like `validate` but it will log an warning instead of throwing an error. Returns `true` if validation was successful, otherwise `false`.
+
+### valueOrDefault(value: Any)
+
+Returns `value` or the default value when set and `value === undefined`. See example of `withDefault`.
