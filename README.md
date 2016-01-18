@@ -12,7 +12,7 @@ npm install --save js-props-validator
 
 ## Example
 
-```
+```JavaScript
 import Props from 'js-props';
 
 const validator = Props.object({
@@ -49,13 +49,13 @@ validator.valueOrDefault({
 
 ### Any
 
-```
+```JavaScript
 Props.any([ ofType: Function | Array [, isOptional: boolean = false [, defaultValue: Any ]]])
 ```
 
 Checks for any type. If `ofType` is a function it will be used to validate the value. E.g.:
 
-```
+```JavaScript
 const validator = Props.any((value) => value > 10);
 validator.validateValue(13) === true;
 validator.validateValue(9) === false;
@@ -63,7 +63,7 @@ validator.validateValue(9) === false;
 
 If `ofType` is an array of `Type` the value will be checked if it is one of the given types. E.g.:
 
-```
+```JavaScript
 const validator = Props.any([ Props.number(), Props.string() ]);
 validator.validateValue(12) === true;
 validator.validateValue(twelve) === true;
@@ -72,13 +72,13 @@ validator.validateValue([ 12 ]) === false;
 
 ### Array
 
-```
+```JavaScript
 Props.array([ ofType: Type [, isOptional: boolean = false [, defaultValue: Array ]]])
 ```
 
 Checks for arrays. `ofType` can be defined as Type. E.g.:
 
-```
+```JavaScript
 const validator = Props.array(Props.string());
 validator.validateValue([ "a", "b", "c" ]) === true;
 validator.validateValue([ 1, 2, 3 ]) === false;
@@ -86,7 +86,7 @@ validator.validateValue([ 1, 2, 3 ]) === false;
 
 ### Boolean
 
-```
+```JavaScript
 Props.bool([ isOptional: boolean = false [, defaultValue: boolean ]])
 ```
 
@@ -94,13 +94,13 @@ Checks for boolean.
 
 ### Enumeration
 
-```
+```JavaScript
 Props.oneOf(values: Array [, isOptional: boolean = false [, defaultValue: Any ]])
 ```
 
 Checks for a set of defined values. E.g.:
 
-```
+```JavaScript
 const validator = Props.oneOf([ 1, 'A', 2 ]);
 validator.validateValue(1) === true;
 validator.validateValue('B') === false;
@@ -108,7 +108,7 @@ validator.validateValue('B') === false;
 
 ### Function
 
-```
+```JavaScript
 Props.func([ isOptional: boolean = false [, defaultValue: Function ]])
 ```
 
@@ -116,7 +116,7 @@ Checks for functions.
 
 ### Number
 
-```
+```JavaScript
 Props.number([ isOptional: boolean = false [, defaultValue: Number ]])
 ```
 
@@ -124,13 +124,13 @@ Checks for numbers.
 
 ### Object
 
-```
+```JavaScript
 Props.object(ofType: Object | Type [, isOptional: boolean = false [, defaultValue: Number ]])
 ```
 
 `ofType` can be a predefined object structure. E.g.:
 
-```
+```JavaScript
 const validator = Props.object({
     name: Props.string(),
     age: Props.number(),
@@ -146,7 +146,7 @@ validator.validate({
 
 If `ofType` is a type, the validator checks if every property of the object meets the type's validations. E.g.:
 
-```
+```JavaScript
 const validator = Props.object(Props.object({
     label: Props.string(),
     value: Props.any([ Props.number(), Props.string() ])
@@ -176,7 +176,7 @@ validator.validateValue({
 
 ### String
 
-```
+```JavaScript
 Props.string([ isOptional: boolean = false [, defaultValue: String ]])
 ```
 
@@ -190,7 +190,7 @@ Every type supports the following listed methods.
 
 The validation will return `true` if value is not set.
 
-```
+```JavaScript
 const validator = Props.number().isOptional(); // alternative to: Props.number(true);
 validator.validateValue(1) === true;
 validator.validateValue(undefined) === true;
@@ -201,7 +201,7 @@ validator.validateValue("one") === false;
 
 The validation will return a default value when calling `valueOrDefault` on a undefined value. Note: `isOptional` will be automatically set to `true` when calling `withDefault`.
 
-```
+```JavaScript
 const validator = Props.number().withDefault(42); // alternative to: Props.number(true);
 validator.validateValue(1) === true;
 validator.validateValue(undefined) === true;
@@ -215,7 +215,7 @@ validator.valueOrDefault(undefined) === 42;
 
 The Method will validate the value, if the validation fails an error will be thrown. `valueName` is used within the error message if set.
 
-```
+```JavaScript
 const validator = Props.object({
     name: Props.string(),
     age: Props.number(),
