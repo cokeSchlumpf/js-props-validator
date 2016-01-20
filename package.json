@@ -1,6 +1,6 @@
 {
   "name": "js-props-validator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JavaScript object properties validation.",
   "author": "Michael Wellner <info@michaelwellner.de>",
   "main": "lib/main.js",
