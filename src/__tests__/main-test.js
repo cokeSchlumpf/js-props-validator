@@ -2,12 +2,13 @@ jest.dontMock('underscore');
 jest.dontMock('underscore-deep-extend');
 jest.dontMock('../main.js');
 
-var Props = require('../main.js');
+var Props = require('../main.js').default;
 
 console.log(Props);
 
 describe('Props.any', function() {
   it('checks values by a custom function', function() {
+    console.log(Props);
     var validator = Props.any((value) => {
       return value > 10
     });
