@@ -4,6 +4,8 @@ jest.dontMock('../main.js');
 
 var Props = require('../main.js');
 
+console.log(Props);
+
 describe('Props.any', function() {
   it('checks values by a custom function', function() {
     var validator = Props.any((value) => {
